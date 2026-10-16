@@ -11,31 +11,25 @@
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen pb-12">
 
+  <!-- En-tête -->
   <header class="bg-gradient-to-r from-emerald-800 via-emerald-700 to-teal-800 text-white shadow-lg">
     <div class="max-w-3xl mx-auto px-4 py-8 text-center">
       <div class="inline-flex items-center gap-2 bg-emerald-900/50 border border-emerald-400/30 px-3 py-1 rounded-full text-xs font-semibold tracking-wide uppercase mb-3">
         <span>Département de Nioro du Rip • UAM</span>
       </div>
-      <h1 class="text-2xl sm:text-3xl font-bold tracking-tight">
+      <h1 id="page-title" class="text-2xl sm:text-3xl font-bold tracking-tight">
         Recensement des Étudiants de l'AERNR
       </h1>
-      <p class="mt-2 text-emerald-100 text-sm sm:text-base max-w-xl mx-auto">
+      <p id="page-subtitle" class="mt-2 text-emerald-100 text-sm sm:text-base max-w-xl mx-auto">
         Amicale des Étudiants Ressortissants de Nioro du Rip à l'Université Amadou Mahtar Mbow (UAM).
       </p>
-
-      <!-- Bouton secret pour accéder à l'admin -->
-      <div class="mt-6 flex justify-center">
-        <button onclick="openAdmin()" class="text-xs bg-emerald-900/40 text-emerald-200 hover:text-white px-3 py-1.5 rounded-lg border border-emerald-500/30 transition">
-          🔐 Espace Bureau / Admin
-        </button>
-      </div>
     </div>
   </header>
 
   <main class="max-w-3xl mx-auto px-4 mt-6">
     <div id="alert-box" class="hidden mb-6 p-4 rounded-xl border text-sm font-medium"></div>
 
-    <!-- FORMULAIRE ÉTUDIANT -->
+    <!-- 1. VUE FORMULAIRE (Étudiants) -->
     <div id="view-form" class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
       <form id="aernr-form" class="p-6 sm:p-8 space-y-8">
         
@@ -226,7 +220,7 @@
       </form>
     </div>
 
-    <!-- ESPACE ADMIN (PROTÉGÉ) -->
+    <!-- 2. VUE ADMIN (Sécurisée par URL secrète) -->
     <div id="view-admin" class="hidden bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-4 mb-4">
         <div>
@@ -234,9 +228,6 @@
           <p class="text-xs text-slate-500" id="student-count">Chargement...</p>
         </div>
         <div class="flex gap-2">
-          <button onclick="switchTab('form')" class="px-3 py-2 rounded-lg border border-slate-300 text-xs font-semibold hover:bg-slate-50">
-            ⬅️ Retour au formulaire
-          </button>
           <button onclick="loadStudents()" class="px-3 py-2 rounded-lg border border-slate-300 text-xs font-semibold hover:bg-slate-50">
             🔄 Actualiser
           </button>
@@ -270,31 +261,31 @@
     const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
     let studentsList = [];
 
+    // CODE SECRET ADMIN (Vous pouvez le changer ici si vous voulez)
+    const SECRET_ADMIN_KEY = "aernr2026secu";
+
+    // Vérification automatique au chargement de la page
+    window.addEventListener("DOMContentLoaded", () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const adminKey = urlParams.get("admin");
+      const path = window.location.pathname;
+
+      // Si l'URL contient ?admin=aernr2026secu ou /admin
+      if (adminKey === SECRET_ADMIN_KEY || path.includes("/admin")) {
+        document.getElementById("view-form").classList.add("hidden");
+        document.getElementById("view-admin").classList.remove("hidden");
+        document.getElementById("page-title").textContent = "Tableau de Bord - Administration AERNR";
+        document.getElementById("page-subtitle").textContent = "Espace réservé au bureau de l'amicale pour consulter et exporter les listes.";
+        loadStudents();
+      }
+    });
+
     function showAlert(message, type = "success") {
       const box = document.getElementById("alert-box");
       box.className = `mb-6 p-4 rounded-xl border text-sm font-medium ${type === "success" ? "bg-emerald-50 border-emerald-300 text-emerald-900" : "bg-red-50 border-red-300 text-red-900"}`;
       box.innerHTML = message;
       box.classList.remove("hidden");
       window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-
-    function openAdmin() {
-      const pwd = prompt("Entrez le mot de passe administrateur :");
-      // Mot de passe par défaut : "aernr2026" (vous pourrez le changer ici si vous voulez)
-      if (pwd === "aernr2026") {
-        document.getElementById("view-form").classList.add("hidden");
-        document.getElementById("view-admin").classList.remove("hidden");
-        loadStudents();
-      } else if (pwd !== null) {
-        alert("Mot de passe incorrect !");
-      }
-    }
-
-    function switchTab(tab) {
-      if (tab === 'form') {
-        document.getElementById("view-form").classList.remove("hidden");
-        document.getElementById("view-admin").classList.add("hidden");
-      }
     }
 
     document.getElementById("aernr-form").addEventListener("submit", async (e) => {
