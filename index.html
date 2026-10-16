@@ -1,41 +1,120 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" class="scroll-smooth">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Recensement AERNR - UAM</title>
+  <title>AERNR - UAM | Amicale des Étudiants de Nioro du Rip</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style> body { font-family: 'Inter', sans-serif; } </style>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen pb-12">
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col justify-between">
 
-  <header class="bg-gradient-to-r from-emerald-800 via-emerald-700 to-teal-800 text-white shadow-lg">
-    <div class="max-w-3xl mx-auto px-4 py-8 text-center">
-      <div class="inline-flex items-center gap-2 bg-emerald-900/50 border border-emerald-400/30 px-3 py-1 rounded-full text-xs font-semibold tracking-wide uppercase mb-3">
-        <span>Département de Nioro du Rip • UAM</span>
+  <!-- En-tête / Barre de Navigation du Site -->
+  <header class="bg-gradient-to-r from-emerald-900 via-emerald-800 to-teal-900 text-white shadow-md sticky top-0 z-50">
+    <div class="max-w-5xl mx-auto px-4 py-3 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3 cursor-pointer" onclick="switchSection('home')">
+        <div class="w-10 h-10 rounded-full bg-white/10 border border-emerald-400/30 flex items-center justify-center font-bold text-emerald-300 text-sm overflow-hidden">
+          <span class="text-xs tracking-tighter">AERNR</span>
+        </div>
+        <div>
+          <h1 class="text-base sm:text-lg font-bold tracking-tight">AERNR - UAM</h1>
+          <p class="text-[10px] text-emerald-200">Nioro du Rip • Université Amadou Mahtar Mbow</p>
+        </div>
       </div>
-      <h1 id="page-title" class="text-2xl sm:text-3xl font-bold tracking-tight">
-        Recensement des Étudiants de l'AERNR
-      </h1>
-      <p id="page-subtitle" class="mt-2 text-emerald-100 text-sm sm:text-base max-w-xl mx-auto">
-        Amicale des Étudiants Ressortissants de Nioro du Rip à l'Université Amadou Mahtar Mbow (UAM).
-      </p>
+      
+      <nav class="flex items-center gap-2 sm:gap-4 text-xs sm:text-sm font-medium">
+        <button onclick="switchSection('home')" id="nav-home" class="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition">Accueil</button>
+        <button onclick="switchSection('form')" id="nav-form" class="px-3 py-1.5 rounded-lg hover:bg-white/10 transition">Recensement</button>
+        <button onclick="switchSection('about')" id="nav-about" class="px-3 py-1.5 rounded-lg hover:bg-white/10 transition">L'Amicale</button>
+      </nav>
     </div>
   </header>
 
-  <main class="max-w-3xl mx-auto px-4 mt-6">
+  <main class="max-w-4xl mx-auto px-4 py-8 flex-grow w-full">
     <div id="alert-box" class="hidden mb-6 p-4 rounded-xl border text-sm font-medium"></div>
 
-    <!-- 1. FORMULAIRE ÉTUDIANT -->
-    <div id="view-form" class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+    <!-- 1. PAGE D'ACCUEIL (PRÉSENTATION DU SITE) -->
+    <div id="section-home" class="space-y-8">
+      <div class="bg-gradient-to-br from-emerald-800 to-teal-900 text-white rounded-3xl p-6 sm:p-10 shadow-lg text-center relative overflow-hidden">
+        <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-emerald-600/20 rounded-full blur-2xl"></div>
+        <span class="bg-emerald-700/60 border border-emerald-500/40 text-emerald-100 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">
+          Site Officiel de l'Amicale
+        </span>
+        <h2 class="text-2xl sm:text-4xl font-extrabold mt-4 tracking-tight">
+          Solidarité, Excellence & Fraternité
+        </h2>
+        <p class="mt-3 text-emerald-100 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
+          Bienvenue sur le portail officiel des étudiants ressortissants du département de Nioro du Rip à l'Université Amadou Mahtar Mbow (UAM). 
+        </p>
+        <div class="mt-6 italic text-xs sm:text-sm text-emerald-200 font-medium">
+          « Plus qu'une formation, un avenir à construire »
+        </div>
+        <div class="mt-8 flex flex-wrap justify-center gap-4">
+          <button onclick="switchSection('form')" class="bg-white text-emerald-900 hover:bg-emerald-50 px-6 py-3 rounded-xl font-bold text-sm shadow transition">
+            📋 Accéder au Formulaire de Recensement
+          </button>
+          <button onclick="switchSection('about')" class="bg-emerald-900/60 border border-emerald-500/40 hover:bg-emerald-900 text-white px-6 py-3 rounded-xl font-semibold text-sm transition">
+            En savoir plus
+          </button>
+        </div>
+      </div>
+
+      <!-- Aperçu / Commissions -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="w-10 h-10 bg-emerald-100 text-emerald-700 rounded-xl flex items-center justify-center font-bold mb-3">🎓</div>
+          <h3 class="font-bold text-slate-800 text-base">Commission Pédagogique</h3>
+          <p class="text-xs text-slate-500 mt-1">Soutien académique, tutorat entre étudiants et suivi des orientations au sein des différentes UFR de l'UAM.</p>
+        </div>
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="w-10 h-10 bg-teal-100 text-teal-700 rounded-xl flex items-center justify-center font-bold mb-3">🤝</div>
+          <h3 class="font-bold text-slate-800 text-base">Commission Sociale & Solidarité</h3>
+          <p class="text-xs text-slate-500 mt-1">Entraide entre membres, gestion du logement, intégration des nouveaux bacheliers et accompagnement quotidien.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. PAGE À PROPOS / L'AMICALE -->
+    <div id="section-about" class="hidden bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8 space-y-6">
+      <h2 class="text-xl font-bold text-slate-800 border-b pb-3">À propos de l'AERNR - UAM</h2>
+      <p class="text-sm text-slate-600 leading-relaxed">
+        L'<strong>Amicale des Étudiants Ressortissants de Nioro du Rip (AERNR)</strong> regroupe l'ensemble des étudiants originaires du département de Nioro du Rip (communes, villages et escales) inscrits à l'Université Amadou Mahtar Mbow (UAM) de Diamniadio.
+      </p>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+        <div class="p-4 bg-slate-50 rounded-xl border">
+          <div class="text-lg font-bold text-emerald-700">Département</div>
+          <div class="text-xs text-slate-500 mt-1">Nioro du Rip (Kaolack)</div>
+        </div>
+        <div class="p-4 bg-slate-50 rounded-xl border">
+          <div class="text-lg font-bold text-emerald-700">Institution</div>
+          <div class="text-xs text-slate-500 mt-1">Université Amadou Mahtar Mbow (UAM)</div>
+        </div>
+        <div class="p-4 bg-slate-50 rounded-xl border">
+          <div class="text-lg font-bold text-emerald-700">Objectif</div>
+          <div class="text-xs text-slate-500 mt-1">Unité, Réussite & Entraide</div>
+        </div>
+      </div>
+      <div class="pt-4 flex justify-end">
+        <button onclick="switchSection('form')" class="px-5 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-semibold">
+          Remplir le formulaire de recensement ➔
+        </button>
+      </div>
+    </div>
+
+    <!-- 3. FORMULAIRE ÉTUDIANT -->
+    <div id="section-form" class="hidden bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+      <div class="bg-emerald-800 text-white p-6">
+        <h2 class="text-lg font-bold">Fiche de Recensement Officielle</h2>
+        <p class="text-xs text-emerald-100 mt-1">Veuillez remplir soigneusement tous les champs obligatoires (*).</p>
+      </div>
+      
       <form id="aernr-form" class="p-6 sm:p-8 space-y-8">
-        
         <section>
           <div class="flex items-center gap-2 border-b border-slate-200 pb-2 mb-4">
             <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-md">1</span>
-            <h2 class="text-lg font-bold text-slate-800">Informations Personnelles</h2>
+            <h3 class="text-base font-bold text-slate-800">Informations Personnelles</h3>
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
@@ -76,7 +155,7 @@
         <section>
           <div class="flex items-center gap-2 border-b border-slate-200 pb-2 mb-4">
             <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-md">2</span>
-            <h2 class="text-lg font-bold text-slate-800">Origine Géographique (Nioro du Rip)</h2>
+            <h3 class="text-base font-bold text-slate-800">Origine Géographique (Nioro du Rip)</h3>
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
@@ -110,7 +189,7 @@
         <section>
           <div class="flex items-center gap-2 border-b border-slate-200 pb-2 mb-4">
             <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-md">3</span>
-            <h2 class="text-lg font-bold text-slate-800">Situation Académique à l'UAM</h2>
+            <h3 class="text-base font-bold text-slate-800">Situation Académique à l'UAM</h3>
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
@@ -143,7 +222,7 @@
         <section>
           <div class="flex items-center gap-2 border-b border-slate-200 pb-2 mb-4">
             <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-md">4</span>
-            <h2 class="text-lg font-bold text-slate-800">Logement & Contact d'urgence</h2>
+            <h3 class="text-base font-bold text-slate-800">Logement & Contact d'urgence</h3>
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
@@ -160,273 +239,4 @@
               <input type="text" id="precision_adresse" placeholder="Facultatif" class="w-full rounded-lg border border-slate-300 px-3.5 py-2 text-sm focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
             </div>
             <div class="sm:col-span-2">
-              <label class="block text-sm font-medium text-slate-700 mb-1">
-                Personne à contacter en cas d'urgence <span class="text-xs font-normal text-slate-500">(Facultatif)</span>
-              </label>
-              <input type="text" id="contact_urgence" placeholder="Nom complet, lien et téléphone (Facultatif)" class="w-full rounded-lg border border-slate-300 px-3.5 py-2 text-sm focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
-            </div>
-          </div>
-        </section>
-
-        <section>
-          <div class="flex items-center gap-2 border-b border-slate-200 pb-2 mb-4">
-            <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-md">5</span>
-            <h2 class="text-lg font-bold text-slate-800">Vie Associative (AERNR)</h2>
-          </div>
-          <div class="space-y-4">
-            <div>
-              <label class="block text-sm font-medium text-slate-700 mb-1">Êtes-vous déjà membre de l'amicale AERNR ? <span class="text-red-500">*</span></label>
-              <select id="membre_aernr" required class="w-full rounded-lg border border-slate-300 px-3.5 py-2 text-sm bg-white focus:ring-2 focus:ring-emerald-600 focus:outline-none">
-                <option value="">Sélectionner...</option>
-                <option value="Oui">Oui</option>
-                <option value="Non">Non</option>
-                <option value="Pas encore, mais je souhaite adhérer">Pas encore, mais je souhaite adhérer</option>
-              </select>
-            </div>
-
-            <div>
-              <label class="block text-sm font-medium text-slate-700 mb-2">Commissions de souhait d'investissement (Facultatif)</label>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
-                <label class="flex items-center gap-2 p-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer">
-                  <input type="checkbox" name="commission" value="Pédagogique" class="rounded text-emerald-600" />
-                  <span>Commission Pédagogique</span>
-                </label>
-                <label class="flex items-center gap-2 p-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer">
-                  <input type="checkbox" name="commission" value="Sociale" class="rounded text-emerald-600" />
-                  <span>Commission Sociale</span>
-                </label>
-                <label class="flex items-center gap-2 p-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer">
-                  <input type="checkbox" name="commission" value="Organisation, Culture & Sport" class="rounded text-emerald-600" />
-                  <span>Organisation, Culture & Sport</span>
-                </label>
-                <label class="flex items-center gap-2 p-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer">
-                  <input type="checkbox" name="commission" value="Communication & Numérique" class="rounded text-emerald-600" />
-                  <span>Communication & Numérique</span>
-                </label>
-              </div>
-            </div>
-
-            <div>
-              <label class="block text-sm font-medium text-slate-700 mb-1">Compétences ou suggestions (Facultatif)</label>
-              <textarea id="competences" rows="3" placeholder="Ex: Informatique, design..." class="w-full rounded-lg border border-slate-300 px-3.5 py-2 text-sm focus:ring-2 focus:ring-emerald-600 focus:outline-none"></textarea>
-            </div>
-          </div>
-        </section>
-
-        <button type="submit" id="submit-btn" class="w-full py-3.5 px-6 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-semibold text-base shadow-md transition">
-          Envoyer ma fiche de recensement
-        </button>
-      </form>
-    </div>
-
-    <!-- 2. PAGE DE SUCCÈS / CONFIRMATION -->
-    <div id="view-success" class="hidden bg-white rounded-2xl shadow-sm border border-slate-200 p-8 text-center space-y-6">
-      <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-3xl font-bold">
-        ✓
-      </div>
-      <div>
-        <h2 class="text-2xl font-bold text-slate-800">Fiche enregistrée avec succès !</h2>
-        <p class="text-sm text-slate-500 mt-1">Merci d'avoir renseigné vos informations pour l'AERNR - UAM.</p>
-      </div>
-
-      <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4 text-left text-sm text-emerald-900 space-y-2">
-        <p><strong>Nom & Prénom :</strong> <span id="summary-name"></span></p>
-        <p><strong>Commune :</strong> <span id="summary-commune"></span></p>
-        <p><strong>UFR / Filière :</strong> <span id="summary-filiere"></span></p>
-        <p><strong>WhatsApp :</strong> <span id="summary-phone"></span></p>
-      </div>
-
-      <div class="flex flex-col sm:flex-row gap-3 justify-center pt-2">
-        <button onclick="editForm()" class="px-5 py-3 rounded-xl border border-slate-300 text-sm font-semibold hover:bg-slate-50 transition">
-          ✏️ Modifier mes informations
-        </button>
-        <button onclick="window.location.reload()" class="px-5 py-3 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white text-sm font-semibold transition">
-          ✨ Terminer / Nouveau formulaire
-        </button>
-      </div>
-    </div>
-
-    <!-- 3. ESPACE ADMIN -->
-    <div id="view-admin" class="hidden bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-4 mb-4">
-        <div>
-          <h2 class="text-lg font-bold text-slate-800">🔐 Espace Administration - AERNR</h2>
-          <p class="text-xs text-slate-500" id="student-count">Chargement...</p>
-        </div>
-        <div class="flex gap-2">
-          <button onclick="loadStudents()" class="px-3 py-2 rounded-lg border border-slate-300 text-xs font-semibold hover:bg-slate-50">
-            🔄 Actualiser
-          </button>
-          <button onclick="exportCSV()" class="px-3 py-2 rounded-lg bg-emerald-700 text-white text-xs font-semibold hover:bg-emerald-800">
-            📥 Exporter Excel (CSV)
-          </button>
-        </div>
-      </div>
-
-      <div class="overflow-x-auto">
-        <table class="w-full text-left border-collapse text-xs">
-          <thead>
-            <tr class="bg-slate-100 text-slate-600 uppercase">
-              <th class="p-3 border-b">Nom complet</th>
-              <th class="p-3 border-b">WhatsApp</th>
-              <th class="p-3 border-b">Commune</th>
-              <th class="p-3 border-b">UFR / Filière</th>
-              <th class="p-3 border-b">Niveau</th>
-              <th class="p-3 border-b">Hébergement</th>
-              <th class="p-3 border-b text-center">Action</th>
-            </tr>
-          </thead>
-          <tbody id="students-table-body" class="divide-y divide-slate-200"></tbody>
-        </table>
-      </div>
-    </div>
-  </main>
-
-  <script>
-    const SUPABASE_URL = "https://uegnvagluwvfzeutpebn.supabase.co";
-    const SUPABASE_KEY = "sb_publishable_jAEMLHED9n7AKSE2d0cjww_fjIYNSnx";
-    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    let studentsList = [];
-    const SECRET_ADMIN_CODE = "aernr2026secu";
-
-    window.addEventListener("DOMContentLoaded", () => {
-      const path = window.location.pathname;
-      const search = window.location.search;
-
-      if (path.includes("/admin") || search.includes("admin")) {
-        const enteredCode = prompt("🔐 Entrez le code secret administrateur :");
-        if (enteredCode === SECRET_ADMIN_CODE) {
-          document.getElementById("view-form").classList.add("hidden");
-          document.getElementById("view-admin").classList.remove("hidden");
-          document.getElementById("page-title").textContent = "Administration - AERNR UAM";
-          document.getElementById("page-subtitle").textContent = "Liste des étudiants inscrits et export des données.";
-          loadStudents();
-        } else {
-          alert("Code incorrect ! Redirection vers le formulaire.");
-          window.location.href = "/";
-        }
-      }
-    });
-
-    document.getElementById("aernr-form").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const btn = document.getElementById("submit-btn");
-      btn.disabled = true;
-      btn.textContent = "Enregistrement en cours...";
-
-      const selectedCommissions = Array.from(document.querySelectorAll('input[name="commission"]:checked')).map(cb => cb.value);
-
-      const payload = {
-        prenoms: document.getElementById("prenoms").value.trim(),
-        nom: document.getElementById("nom").value.trim(),
-        sexe: document.getElementById("sexe").value,
-        date_naissance: document.getElementById("date_naissance").value,
-        telephone_whatsapp: document.getElementById("telephone_whatsapp").value.trim(),
-        telephone_secondaire: document.getElementById("telephone_secondaire").value.trim() || null,
-        email: document.getElementById("email").value.trim(),
-        commune_origine: document.getElementById("commune_origine").value,
-        village_quartier: document.getElementById("village_quartier").value.trim(),
-        ufr_ecole: document.getElementById("ufr_ecole").value.trim(),
-        filiere: document.getElementById("filiere").value.trim(),
-        niveau_etudes: document.getElementById("niveau_etudes").value,
-        lycee_bac: document.getElementById("lycee_bac").value.trim() || null,
-        lieu_hebergement: document.getElementById("lieu_hebergement").value,
-        precision_adresse: document.getElementById("precision_adresse").value.trim() || null,
-        contact_urgence: document.getElementById("contact_urgence").value.trim() || null,
-        membre_aernr: document.getElementById("membre_aernr").value,
-        commissions: selectedCommissions,
-        competences: document.getElementById("competences").value.trim() || null
-      };
-
-      const { error } = await supabaseClient.from("recensement_aernr_uam").insert([payload]);
-
-      btn.disabled = false;
-      btn.textContent = "Envoyer ma fiche de recensement";
-
-      if (error) {
-        alert("❌ Erreur : " + error.message);
-      } else {
-        document.getElementById("summary-name").textContent = payload.prenoms + " " + payload.nom;
-        document.getElementById("summary-commune").textContent = payload.commune_origine + " (" + payload.village_quartier + ")";
-        document.getElementById("summary-filiere").textContent = payload.ufr_ecole + " - " + payload.filiere + " (" + payload.niveau_etudes + ")";
-        document.getElementById("summary-phone").textContent = payload.telephone_whatsapp;
-
-        document.getElementById("view-form").classList.add("hidden");
-        document.getElementById("view-success").classList.remove("hidden");
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }
-    });
-
-    function editForm() {
-      document.getElementById("view-success").classList.add("hidden");
-      document.getElementById("view-form").classList.remove("hidden");
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-
-    async function loadStudents() {
-      const tbody = document.getElementById("students-table-body");
-      const countEl = document.getElementById("student-count");
-      tbody.innerHTML = '<tr><td colspan="7" class="p-4 text-center text-slate-400">Chargement...</td></tr>';
-
-      const { data, error } = await supabaseClient.from("recensement_aernr_uam").select("*").order("created_at", { ascending: false });
-
-      if (error) {
-        tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-red-500">Erreur : ${error.message}</td></tr>`;
-        return;
-      }
-
-      studentsList = data || [];
-      countEl.textContent = `${studentsList.length} étudiant(s) enregistré(s)`;
-
-      if (studentsList.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7" class="p-4 text-center text-slate-400">Aucun étudiant inscrit pour le moment.</td></tr>';
-        return;
-      }
-
-      tbody.innerHTML = studentsList.map(s => `
-        <tr class="hover:bg-slate-50">
-          <td class="p-3 font-semibold text-slate-800">${s.prenoms} ${s.nom}</td>
-          <td class="p-3">${s.telephone_whatsapp}</td>
-          <td class="p-3">${s.commune_origine} <span class="text-slate-400">(${s.village_quartier})</span></td>
-          <td class="p-3">${s.ufr_ecole} - ${s.filiere}</td>
-          <td class="p-3">${s.niveau_etudes}</td>
-          <td class="p-3">${s.lieu_hebergement}</td>
-          <td class="p-3 text-center">
-            <button onclick="deleteStudent('${s.id}', '${s.prenoms} ${s.nom}')" class="bg-red-100 hover:bg-red-200 text-red-700 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition">
-              🗑️ Supprimer
-            </button>
-          </td>
-        </tr>
-      `).join("");
-    }
-
-    async function deleteStudent(id, name) {
-      if (confirm(`Voulez-vous vraiment supprimer l'étudiant(e) : ${name} ?`)) {
-        const { error } = await supabaseClient.from("recensement_aernr_uam").delete().eq("id", id);
-        if (error) {
-          alert("Erreur lors de la suppression : " + error.message);
-        } else {
-          alert("Étudiant(e) supprimé(e) avec succès !");
-          loadStudents();
-        }
-      }
-    }
-
-    function exportCSV() {
-      if (!studentsList.length) { alert("Aucune donnée à exporter."); return; }
-      const headers = ["Prénoms", "Nom", "Sexe", "Date de naissance", "WhatsApp", "Tél Secondaire", "Email", "Commune", "Village/Quartier", "UFR/École", "Filière", "Niveau", "Lycée & Bac", "Hébergement", "Précision Adresse", "Contact Urgence", "Membre AERNR", "Commissions", "Compétences"];
-      const rows = studentsList.map(s => [
-        s.prenoms, s.nom, s.sexe, s.date_naissance, s.telephone_whatsapp, s.telephone_secondaire || "", s.email, s.commune_origine, s.village_quartier, s.ufr_ecole, s.filiere, s.niveau_etudes, s.lycee_bac || "", s.lieu_hebergement, s.precision_adresse || "", s.contact_urgence || "", s.membre_aernr, (s.commissions || []).join(" | "), s.competences || ""
-      ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(";"));
-
-      const csvContent = "\uFEFF" + [headers.join(";"), ...rows].join("\n");
-      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "Recensement_AERNR_UAM.csv";
-      a.click();
-    }
-  </script>
-</body>
-</html>
+              <label class="block text-sm font-medium text-slate-700 mb-1">Personne à contacter en cas d'urgence (
