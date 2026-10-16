@@ -28,7 +28,7 @@
   <main class="max-w-3xl mx-auto px-4 mt-6">
     <div id="alert-box" class="hidden mb-6 p-4 rounded-xl border text-sm font-medium"></div>
 
-    <!-- FORMULAIRE ÉTUDIANT -->
+    <!-- 1. FORMULAIRE ÉTUDIANT -->
     <div id="view-form" class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
       <form id="aernr-form" class="p-6 sm:p-8 space-y-8">
         
@@ -219,7 +219,34 @@
       </form>
     </div>
 
-    <!-- ESPACE ADMIN (PROTÉGÉ) -->
+    <!-- 2. PAGE DE SUCCÈS / CONFIRMATION -->
+    <div id="view-success" class="hidden bg-white rounded-2xl shadow-sm border border-slate-200 p-8 text-center space-y-6">
+      <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-3xl font-bold">
+        ✓
+      </div>
+      <div>
+        <h2 class="text-2xl font-bold text-slate-800">Fiche enregistrée avec succès !</h2>
+        <p class="text-sm text-slate-500 mt-1">Merci d'avoir renseigné vos informations pour l'AERNR - UAM.</p>
+      </div>
+
+      <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4 text-left text-sm text-emerald-900 space-y-2">
+        <p><strong>Nom & Prénom :</strong> <span id="summary-name"></span></p>
+        <p><strong>Commune :</strong> <span id="summary-commune"></span></p>
+        <p><strong>UFR / Filière :</strong> <span id="summary-filiere"></span></p>
+        <p><strong>WhatsApp :</strong> <span id="summary-phone"></span></p>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-3 justify-center pt-2">
+        <button onclick="editForm()" class="px-5 py-3 rounded-xl border border-slate-300 text-sm font-semibold hover:bg-slate-50 transition">
+          ✏️ Modifier mes informations
+        </button>
+        <button onclick="window.location.reload()" class="px-5 py-3 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white text-sm font-semibold transition">
+          ✨ Terminer / Nouveau formulaire
+        </button>
+      </div>
+    </div>
+
+    <!-- 3. ESPACE ADMIN -->
     <div id="view-admin" class="hidden bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-4 mb-4">
         <div>
@@ -259,15 +286,12 @@
     const SUPABASE_KEY = "sb_publishable_jAEMLHED9n7AKSE2d0cjww_fjIYNSnx";
     const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
     let studentsList = [];
-
-    // CODE SECRET ADMIN
     const SECRET_ADMIN_CODE = "aernr2026secu";
 
     window.addEventListener("DOMContentLoaded", () => {
       const path = window.location.pathname;
       const search = window.location.search;
 
-      // Si le lien contient /admin ou ?admin
       if (path.includes("/admin") || search.includes("admin")) {
         const enteredCode = prompt("🔐 Entrez le code secret administrateur :");
         if (enteredCode === SECRET_ADMIN_CODE) {
@@ -282,14 +306,6 @@
         }
       }
     });
-
-    function showAlert(message, type = "success") {
-      const box = document.getElementById("alert-box");
-      box.className = `mb-6 p-4 rounded-xl border text-sm font-medium ${type === "success" ? "bg-emerald-50 border-emerald-300 text-emerald-900" : "bg-red-50 border-red-300 text-red-900"}`;
-      box.innerHTML = message;
-      box.classList.remove("hidden");
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
 
     document.getElementById("aernr-form").addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -327,12 +343,27 @@
       btn.textContent = "Envoyer ma fiche de recensement";
 
       if (error) {
-        showAlert("❌ Erreur : " + error.message, "error");
+        alert("❌ Erreur : " + error.message);
       } else {
-        showAlert("✅ Merci ! Votre fiche a bien été enregistrée.", "success");
-        document.getElementById("aernr-form").reset();
+        // Remplir le récapitulatif
+        document.getElementById("summary-name").textContent = payload.prenoms + " " + payload.nom;
+        document.getElementById("summary-commune").textContent = payload.commune_origine + " (" + payload.village_quartier + ")";
+        document.getElementById("summary-filiere").textContent = payload.ufr_ecole + " - " + payload.filiere + " (" + payload.niveau_etudes + ")";
+        document.getElementById("summary-phone").textContent = payload.telephone_whatsapp;
+
+        // Afficher la page de succès et masquer le formulaire
+        document.getElementById("view-form").classList.add("hidden");
+        document.getElementById("view-success").classList.remove("hidden");
+        window.scrollTo({ top: 0, behavior: "smooth" });
       }
     });
+
+    function editForm() {
+      // Remasquer le succès et réafficher le formulaire avec les champs déjà saisis
+      document.getElementById("view-success").classList.add("hidden");
+      document.getElementById("view-form").classList.remove("hidden");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
 
     async function loadStudents() {
       const tbody = document.getElementById("students-table-body");
