@@ -273,6 +273,7 @@
               <th class="p-3 border-b">UFR / Filière</th>
               <th class="p-3 border-b">Niveau</th>
               <th class="p-3 border-b">Hébergement</th>
+              <th class="p-3 border-b text-center">Action</th>
             </tr>
           </thead>
           <tbody id="students-table-body" class="divide-y divide-slate-200"></tbody>
@@ -345,13 +346,11 @@
       if (error) {
         alert("❌ Erreur : " + error.message);
       } else {
-        // Remplir le récapitulatif
         document.getElementById("summary-name").textContent = payload.prenoms + " " + payload.nom;
         document.getElementById("summary-commune").textContent = payload.commune_origine + " (" + payload.village_quartier + ")";
         document.getElementById("summary-filiere").textContent = payload.ufr_ecole + " - " + payload.filiere + " (" + payload.niveau_etudes + ")";
         document.getElementById("summary-phone").textContent = payload.telephone_whatsapp;
 
-        // Afficher la page de succès et masquer le formulaire
         document.getElementById("view-form").classList.add("hidden");
         document.getElementById("view-success").classList.remove("hidden");
         window.scrollTo({ top: 0, behavior: "smooth" });
@@ -359,7 +358,6 @@
     });
 
     function editForm() {
-      // Remasquer le succès et réafficher le formulaire avec les champs déjà saisis
       document.getElementById("view-success").classList.add("hidden");
       document.getElementById("view-form").classList.remove("hidden");
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -368,12 +366,12 @@
     async function loadStudents() {
       const tbody = document.getElementById("students-table-body");
       const countEl = document.getElementById("student-count");
-      tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-slate-400">Chargement...</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="7" class="p-4 text-center text-slate-400">Chargement...</td></tr>';
 
       const { data, error } = await supabaseClient.from("recensement_aernr_uam").select("*").order("created_at", { ascending: false });
 
       if (error) {
-        tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-red-500">Erreur : ${error.message}</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-red-500">Erreur : ${error.message}</td></tr>`;
         return;
       }
 
@@ -381,7 +379,7 @@
       countEl.textContent = `${studentsList.length} étudiant(s) enregistré(s)`;
 
       if (studentsList.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-slate-400">Aucun étudiant inscrit pour le moment.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="7" class="p-4 text-center text-slate-400">Aucun étudiant inscrit pour le moment.</td></tr>';
         return;
       }
 
@@ -393,8 +391,25 @@
           <td class="p-3">${s.ufr_ecole} - ${s.filiere}</td>
           <td class="p-3">${s.niveau_etudes}</td>
           <td class="p-3">${s.lieu_hebergement}</td>
+          <td class="p-3 text-center">
+            <button onclick="deleteStudent('${s.id}', '${s.prenoms} ${s.nom}')" class="bg-red-100 hover:bg-red-200 text-red-700 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition">
+              🗑️ Supprimer
+            </button>
+          </td>
         </tr>
       `).join("");
+    }
+
+    async function deleteStudent(id, name) {
+      if (confirm(`Voulez-vous vraiment supprimer l'étudiant(e) : ${name} ?`)) {
+        const { error } = await supabaseClient.from("recensement_aernr_uam").delete().eq("id", id);
+        if (error) {
+          alert("Erreur lors de la suppression : " + error.message);
+        } else {
+          alert("Étudiant(e) supprimé(e) avec succès !");
+          loadStudents();
+        }
+      }
     }
 
     function exportCSV() {
