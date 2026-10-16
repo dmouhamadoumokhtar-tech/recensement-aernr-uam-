@@ -11,7 +11,6 @@
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen pb-12">
 
-  <!-- En-tête -->
   <header class="bg-gradient-to-r from-emerald-800 via-emerald-700 to-teal-800 text-white shadow-lg">
     <div class="max-w-3xl mx-auto px-4 py-8 text-center">
       <div class="inline-flex items-center gap-2 bg-emerald-900/50 border border-emerald-400/30 px-3 py-1 rounded-full text-xs font-semibold tracking-wide uppercase mb-3">
@@ -29,7 +28,7 @@
   <main class="max-w-3xl mx-auto px-4 mt-6">
     <div id="alert-box" class="hidden mb-6 p-4 rounded-xl border text-sm font-medium"></div>
 
-    <!-- 1. VUE FORMULAIRE (Étudiants) -->
+    <!-- FORMULAIRE ÉTUDIANT -->
     <div id="view-form" class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
       <form id="aernr-form" class="p-6 sm:p-8 space-y-8">
         
@@ -220,7 +219,7 @@
       </form>
     </div>
 
-    <!-- 2. VUE ADMIN (Sécurisée par URL secrète) -->
+    <!-- ESPACE ADMIN (PROTÉGÉ) -->
     <div id="view-admin" class="hidden bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-4 mb-4">
         <div>
@@ -261,22 +260,26 @@
     const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
     let studentsList = [];
 
-    // CODE SECRET ADMIN (Vous pouvez le changer ici si vous voulez)
-    const SECRET_ADMIN_KEY = "aernr2026secu";
+    // CODE SECRET ADMIN
+    const SECRET_ADMIN_CODE = "aernr2026secu";
 
-    // Vérification automatique au chargement de la page
     window.addEventListener("DOMContentLoaded", () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      const adminKey = urlParams.get("admin");
       const path = window.location.pathname;
+      const search = window.location.search;
 
-      // Si l'URL contient ?admin=aernr2026secu ou /admin
-      if (adminKey === SECRET_ADMIN_KEY || path.includes("/admin")) {
-        document.getElementById("view-form").classList.add("hidden");
-        document.getElementById("view-admin").classList.remove("hidden");
-        document.getElementById("page-title").textContent = "Tableau de Bord - Administration AERNR";
-        document.getElementById("page-subtitle").textContent = "Espace réservé au bureau de l'amicale pour consulter et exporter les listes.";
-        loadStudents();
+      // Si le lien contient /admin ou ?admin
+      if (path.includes("/admin") || search.includes("admin")) {
+        const enteredCode = prompt("🔐 Entrez le code secret administrateur :");
+        if (enteredCode === SECRET_ADMIN_CODE) {
+          document.getElementById("view-form").classList.add("hidden");
+          document.getElementById("view-admin").classList.remove("hidden");
+          document.getElementById("page-title").textContent = "Administration - AERNR UAM";
+          document.getElementById("page-subtitle").textContent = "Liste des étudiants inscrits et export des données.";
+          loadStudents();
+        } else {
+          alert("Code incorrect ! Redirection vers le formulaire.");
+          window.location.href = "/";
+        }
       }
     });
 
