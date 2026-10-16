@@ -4,19 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Recensement AERNR - UAM</title>
-  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Supabase JS -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    body { font-family: 'Inter', sans-serif; }
-  </style>
+  <style> body { font-family: 'Inter', sans-serif; } </style>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen pb-12">
 
-  <!-- En-tête -->
   <header class="bg-gradient-to-r from-emerald-800 via-emerald-700 to-teal-800 text-white shadow-lg">
     <div class="max-w-3xl mx-auto px-4 py-8 text-center">
       <div class="inline-flex items-center gap-2 bg-emerald-900/50 border border-emerald-400/30 px-3 py-1 rounded-full text-xs font-semibold tracking-wide uppercase mb-3">
@@ -29,27 +23,22 @@
         Amicale des Étudiants Ressortissants de Nioro du Rip à l'Université Amadou Mahtar Mbow (UAM).
       </p>
 
-      <!-- Navigation Onglets -->
-      <div class="mt-6 flex justify-center gap-2">
-        <button onclick="switchTab('form')" id="tab-form" class="px-4 py-2 rounded-lg text-sm font-semibold bg-white text-emerald-900 shadow transition">
-          📝 Formulaire
-        </button>
-        <button onclick="switchTab('admin')" id="tab-admin" class="px-4 py-2 rounded-lg text-sm font-semibold bg-emerald-900/40 text-emerald-100 hover:bg-emerald-900/60 transition">
-          📊 Liste & Export Excel
+      <!-- Bouton secret pour accéder à l'admin -->
+      <div class="mt-6 flex justify-center">
+        <button onclick="openAdmin()" class="text-xs bg-emerald-900/40 text-emerald-200 hover:text-white px-3 py-1.5 rounded-lg border border-emerald-500/30 transition">
+          🔐 Espace Bureau / Admin
         </button>
       </div>
     </div>
   </header>
 
   <main class="max-w-3xl mx-auto px-4 mt-6">
-    <!-- Message d'alerte succès / erreur -->
     <div id="alert-box" class="hidden mb-6 p-4 rounded-xl border text-sm font-medium"></div>
 
-    <!-- ONGLET 1 : FORMULAIRE -->
+    <!-- FORMULAIRE ÉTUDIANT -->
     <div id="view-form" class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
       <form id="aernr-form" class="p-6 sm:p-8 space-y-8">
         
-        <!-- 1. Informations Personnelles -->
         <section>
           <div class="flex items-center gap-2 border-b border-slate-200 pb-2 mb-4">
             <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-md">1</span>
@@ -86,16 +75,15 @@
             </div>
             <div class="sm:col-span-2">
               <label class="block text-sm font-medium text-slate-700 mb-1">Adresse e-mail <span class="text-red-500">*</span></label>
-              <input type="email" id="email" required placeholder="exemple@uam.edu.sn ou gmail.com" class="w-full rounded-lg border border-slate-300 px-3.5 py-2 text-sm focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
+              <input type="email" id="email" required placeholder="exemple@uam.edu.sn" class="w-full rounded-lg border border-slate-300 px-3.5 py-2 text-sm focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
             </div>
           </div>
         </section>
 
-        <!-- 2. Origine Géographique -->
         <section>
           <div class="flex items-center gap-2 border-b border-slate-200 pb-2 mb-4">
             <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-md">2</span>
-            <h2 class="text-lg font-bold text-slate-800">Origine Géographique (Département de Nioro du Rip)</h2>
+            <h2 class="text-lg font-bold text-slate-800">Origine Géographique (Nioro du Rip)</h2>
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
@@ -126,7 +114,6 @@
           </div>
         </section>
 
-        <!-- 3. Situation Académique à l'UAM -->
         <section>
           <div class="flex items-center gap-2 border-b border-slate-200 pb-2 mb-4">
             <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-md">3</span>
@@ -135,11 +122,11 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label class="block text-sm font-medium text-slate-700 mb-1">UFR / École / Institut (UAM) <span class="text-red-500">*</span></label>
-              <input type="text" id="ufr_ecole" required placeholder="Ex: Polytech Diamniadio, UFR ST, SEG..." class="w-full rounded-lg border border-slate-300 px-3.5 py-2 text-sm focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
+              <input type="text" id="ufr_ecole" required placeholder="Ex: Polytech Diamniadio, UFR ST..." class="w-full rounded-lg border border-slate-300 px-3.5 py-2 text-sm focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
             </div>
             <div>
               <label class="block text-sm font-medium text-slate-700 mb-1">Filière / Spécialité <span class="text-red-500">*</span></label>
-              <input type="text" id="filiere" required placeholder="Ex: Informatique, Génie Civil, Économie..." class="w-full rounded-lg border border-slate-300 px-3.5 py-2 text-sm focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
+              <input type="text" id="filiere" required placeholder="Ex: Informatique, Génie Civil..." class="w-full rounded-lg border border-slate-300 px-3.5 py-2 text-sm focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
             </div>
             <div>
               <label class="block text-sm font-medium text-slate-700 mb-1">Niveau d'études <span class="text-red-500">*</span></label>
@@ -160,7 +147,6 @@
           </div>
         </section>
 
-        <!-- 4. Situation Sociale & Logement -->
         <section>
           <div class="flex items-center gap-2 border-b border-slate-200 pb-2 mb-4">
             <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-md">4</span>
@@ -177,19 +163,18 @@
               </select>
             </div>
             <div>
-              <label class="block text-sm font-medium text-slate-700 mb-1">Précision adresse / Pavillon (Facultatif)</label>
+              <label class="block text-sm font-medium text-slate-700 mb-1">Précision adresse / Pavillon</label>
               <input type="text" id="precision_adresse" placeholder="Facultatif" class="w-full rounded-lg border border-slate-300 px-3.5 py-2 text-sm focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
             </div>
             <div class="sm:col-span-2">
               <label class="block text-sm font-medium text-slate-700 mb-1">
                 Personne à contacter en cas d'urgence <span class="text-xs font-normal text-slate-500">(Facultatif)</span>
               </label>
-              <input type="text" id="contact_urgence" placeholder="Nom complet, lien de parenté et numéro de téléphone (Facultatif)" class="w-full rounded-lg border border-slate-300 px-3.5 py-2 text-sm focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
+              <input type="text" id="contact_urgence" placeholder="Nom complet, lien et téléphone (Facultatif)" class="w-full rounded-lg border border-slate-300 px-3.5 py-2 text-sm focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
             </div>
           </div>
         </section>
 
-        <!-- 5. Vie Associative AERNR -->
         <section>
           <div class="flex items-center gap-2 border-b border-slate-200 pb-2 mb-4">
             <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-md">5</span>
@@ -207,34 +192,30 @@
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-slate-700 mb-2">Dans quelle(s) commission(s) souhaiteriez-vous vous investir ? (Facultatif)</label>
+              <label class="block text-sm font-medium text-slate-700 mb-2">Commissions de souhait d'investissement (Facultatif)</label>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
                 <label class="flex items-center gap-2 p-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer">
-                  <input type="checkbox" name="commission" value="Pédagogique" class="rounded text-emerald-600 focus:ring-emerald-500" />
+                  <input type="checkbox" name="commission" value="Pédagogique" class="rounded text-emerald-600" />
                   <span>Commission Pédagogique</span>
                 </label>
                 <label class="flex items-center gap-2 p-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer">
-                  <input type="checkbox" name="commission" value="Sociale" class="rounded text-emerald-600 focus:ring-emerald-500" />
+                  <input type="checkbox" name="commission" value="Sociale" class="rounded text-emerald-600" />
                   <span>Commission Sociale</span>
                 </label>
                 <label class="flex items-center gap-2 p-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer">
-                  <input type="checkbox" name="commission" value="Organisation, Culture & Sport" class="rounded text-emerald-600 focus:ring-emerald-500" />
+                  <input type="checkbox" name="commission" value="Organisation, Culture & Sport" class="rounded text-emerald-600" />
                   <span>Organisation, Culture & Sport</span>
                 </label>
                 <label class="flex items-center gap-2 p-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer">
-                  <input type="checkbox" name="commission" value="Communication & Numérique" class="rounded text-emerald-600 focus:ring-emerald-500" />
+                  <input type="checkbox" name="commission" value="Communication & Numérique" class="rounded text-emerald-600" />
                   <span>Communication & Numérique</span>
-                </label>
-                <label class="flex items-center gap-2 p-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer sm:col-span-2">
-                  <input type="checkbox" name="commission" value="Finances & Partenariats" class="rounded text-emerald-600 focus:ring-emerald-500" />
-                  <span>Commission Finances & Partenariats</span>
                 </label>
               </div>
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-slate-700 mb-1">Vos compétences ou suggestions pour l'AERNR (Facultatif)</label>
-              <textarea id="competences" rows="3" placeholder="Ex: Informatique, design, secourisme, suggestions pour l'amicale..." class="w-full rounded-lg border border-slate-300 px-3.5 py-2 text-sm focus:ring-2 focus:ring-emerald-600 focus:outline-none"></textarea>
+              <label class="block text-sm font-medium text-slate-700 mb-1">Compétences ou suggestions (Facultatif)</label>
+              <textarea id="competences" rows="3" placeholder="Ex: Informatique, design..." class="w-full rounded-lg border border-slate-300 px-3.5 py-2 text-sm focus:ring-2 focus:ring-emerald-600 focus:outline-none"></textarea>
             </div>
           </div>
         </section>
@@ -245,19 +226,22 @@
       </form>
     </div>
 
-    <!-- ONGLET 2 : LISTE & EXPORT -->
+    <!-- ESPACE ADMIN (PROTÉGÉ) -->
     <div id="view-admin" class="hidden bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-4 mb-4">
         <div>
-          <h2 class="text-lg font-bold text-slate-800">Étudiants recensés (AERNR - UAM)</h2>
-          <p class="text-xs text-slate-500" id="student-count">Chargement des données...</p>
+          <h2 class="text-lg font-bold text-slate-800">🔐 Espace Administration - AERNR</h2>
+          <p class="text-xs text-slate-500" id="student-count">Chargement...</p>
         </div>
         <div class="flex gap-2">
+          <button onclick="switchTab('form')" class="px-3 py-2 rounded-lg border border-slate-300 text-xs font-semibold hover:bg-slate-50">
+            ⬅️ Retour au formulaire
+          </button>
           <button onclick="loadStudents()" class="px-3 py-2 rounded-lg border border-slate-300 text-xs font-semibold hover:bg-slate-50">
             🔄 Actualiser
           </button>
           <button onclick="exportCSV()" class="px-3 py-2 rounded-lg bg-emerald-700 text-white text-xs font-semibold hover:bg-emerald-800">
-            📥 Exporter en Excel (CSV)
+            📥 Exporter Excel (CSV)
           </button>
         </div>
       </div>
@@ -281,46 +265,38 @@
   </main>
 
   <script>
-    // Configuration Supabase avec vos identifiants
     const SUPABASE_URL = "https://uegnvagluwvfzeutpebn.supabase.co";
     const SUPABASE_KEY = "sb_publishable_jAEMLHED9n7AKSE2d0cjww_fjIYNSnx";
     const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
     let studentsList = [];
 
     function showAlert(message, type = "success") {
       const box = document.getElementById("alert-box");
-      box.className = `mb-6 p-4 rounded-xl border text-sm font-medium ${
-        type === "success"
-          ? "bg-emerald-50 border-emerald-300 text-emerald-900"
-          : "bg-red-50 border-red-300 text-red-900"
-      }`;
+      box.className = `mb-6 p-4 rounded-xl border text-sm font-medium ${type === "success" ? "bg-emerald-50 border-emerald-300 text-emerald-900" : "bg-red-50 border-red-300 text-red-900"}`;
       box.innerHTML = message;
       box.classList.remove("hidden");
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
-    function switchTab(tab) {
-      const formView = document.getElementById("view-form");
-      const adminView = document.getElementById("view-admin");
-      const tabForm = document.getElementById("tab-form");
-      const tabAdmin = document.getElementById("tab-admin");
-
-      if (tab === "form") {
-        formView.classList.remove("hidden");
-        adminView.classList.add("hidden");
-        tabForm.className = "px-4 py-2 rounded-lg text-sm font-semibold bg-white text-emerald-900 shadow transition";
-        tabAdmin.className = "px-4 py-2 rounded-lg text-sm font-semibold bg-emerald-900/40 text-emerald-100 hover:bg-emerald-900/60 transition";
-      } else {
-        formView.classList.add("hidden");
-        adminView.classList.remove("hidden");
-        tabAdmin.className = "px-4 py-2 rounded-lg text-sm font-semibold bg-white text-emerald-900 shadow transition";
-        tabForm.className = "px-4 py-2 rounded-lg text-sm font-semibold bg-emerald-900/40 text-emerald-100 hover:bg-emerald-900/60 transition";
+    function openAdmin() {
+      const pwd = prompt("Entrez le mot de passe administrateur :");
+      // Mot de passe par défaut : "aernr2026" (vous pourrez le changer ici si vous voulez)
+      if (pwd === "aernr2026") {
+        document.getElementById("view-form").classList.add("hidden");
+        document.getElementById("view-admin").classList.remove("hidden");
         loadStudents();
+      } else if (pwd !== null) {
+        alert("Mot de passe incorrect !");
       }
     }
 
-    // Envoi du formulaire
+    function switchTab(tab) {
+      if (tab === 'form') {
+        document.getElementById("view-form").classList.remove("hidden");
+        document.getElementById("view-admin").classList.add("hidden");
+      }
+    }
+
     document.getElementById("aernr-form").addEventListener("submit", async (e) => {
       e.preventDefault();
       const btn = document.getElementById("submit-btn");
@@ -357,23 +333,19 @@
       btn.textContent = "Envoyer ma fiche de recensement";
 
       if (error) {
-        showAlert("❌ Erreur lors de l'enregistrement : " + error.message + "<br><small>Vérifiez que vous avez bien exécuté le script SQL dans Supabase.</small>", "error");
+        showAlert("❌ Erreur : " + error.message, "error");
       } else {
-        showAlert("✅ Merci ! Votre recensement à l'AERNR - UAM a bien été enregistré.", "success");
+        showAlert("✅ Merci ! Votre fiche a bien été enregistrée.", "success");
         document.getElementById("aernr-form").reset();
       }
     });
 
-    // Chargement de la liste des étudiants
     async function loadStudents() {
       const tbody = document.getElementById("students-table-body");
       const countEl = document.getElementById("student-count");
       tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-slate-400">Chargement...</td></tr>';
 
-      const { data, error } = await supabaseClient
-        .from("recensement_aernr_uam")
-        .select("*")
-        .order("created_at", { ascending: false });
+      const { data, error } = await supabaseClient.from("recensement_aernr_uam").select("*").order("created_at", { ascending: false });
 
       if (error) {
         tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-red-500">Erreur : ${error.message}</td></tr>`;
@@ -384,7 +356,7 @@
       countEl.textContent = `${studentsList.length} étudiant(s) enregistré(s)`;
 
       if (studentsList.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-slate-400">Aucun étudiant enregistré pour le moment.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-slate-400">Aucun étudiant inscrit pour le moment.</td></tr>';
         return;
       }
 
@@ -400,23 +372,11 @@
       `).join("");
     }
 
-    // Export CSV pour Excel
     function exportCSV() {
-      if (!studentsList.length) {
-        alert("Aucune donnée à exporter.");
-        return;
-      }
-      const headers = [
-        "Prénoms", "Nom", "Sexe", "Date de naissance", "WhatsApp", "Tél Secondaire",
-        "Email", "Commune", "Village/Quartier", "UFR/École", "Filière", "Niveau",
-        "Lycée & Bac", "Hébergement", "Précision Adresse", "Contact Urgence",
-        "Membre AERNR", "Commissions", "Compétences"
-      ];
+      if (!studentsList.length) { alert("Aucune donnée à exporter."); return; }
+      const headers = ["Prénoms", "Nom", "Sexe", "Date de naissance", "WhatsApp", "Tél Secondaire", "Email", "Commune", "Village/Quartier", "UFR/École", "Filière", "Niveau", "Lycée & Bac", "Hébergement", "Précision Adresse", "Contact Urgence", "Membre AERNR", "Commissions", "Compétences"];
       const rows = studentsList.map(s => [
-        s.prenoms, s.nom, s.sexe, s.date_naissance, s.telephone_whatsapp, s.telephone_secondaire || "",
-        s.email, s.commune_origine, s.village_quartier, s.ufr_ecole, s.filiere, s.niveau_etudes,
-        s.lycee_bac || "", s.lieu_hebergement, s.precision_adresse || "", s.contact_urgence || "",
-        s.membre_aernr, (s.commissions || []).join(" | "), s.competences || ""
+        s.prenoms, s.nom, s.sexe, s.date_naissance, s.telephone_whatsapp, s.telephone_secondaire || "", s.email, s.commune_origine, s.village_quartier, s.ufr_ecole, s.filiere, s.niveau_etudes, s.lycee_bac || "", s.lieu_hebergement, s.precision_adresse || "", s.contact_urgence || "", s.membre_aernr, (s.commissions || []).join(" | "), s.competences || ""
       ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(";"));
 
       const csvContent = "\uFEFF" + [headers.join(";"), ...rows].join("\n");
